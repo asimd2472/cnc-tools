@@ -1,0 +1,139 @@
+[
+  {
+    "name": "Office Appliance and Accessories",
+    "subcategories": [
+      { "name": "Printer Enclosure" },
+      { "name": "Ink Cartridge Enclosure" },
+      { "name": "Toner Cartridge Enclosure" },
+      { "name": "Computer Enclosure" },
+      { "name": "Dongle Enclosure" },
+      { "name": "Scanner Enclosure" },
+      { "name": "Hard Disk Enclosure" },
+      { "name": "Reader Enclosure" },
+      { "name": "Card Reader Enclosure" },
+      { "name": "Keyboard Enclosure" },
+      { "name": "Mouse Enclosure" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Vehicles and Accessories",
+    "subcategories": [
+      { "name": "Motorcycle Connector Enclosure" },
+      { "name": "CNC Lathe Replacement Arm" },
+      { "name": "Bicycle Sprockets" },
+      { "name": "Motorcycle Pedal" },
+      { "name": "Bicycle Frame" },
+      { "name": "Bicycle Part" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "DIY Entertainment",
+    "subcategories": [
+      { "name": "Headband" },
+      { "name": "Demonstration model" },
+      { "name": "Wheel Plate" },
+      { "name": "Game Controller Enclosure" },
+      { "name": "Gaming Enclosure" },
+      { "name": "Guitar Pickup Enclosure" },
+      { "name": "Plastic Ornament" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Audio and Video Appliance",
+    "subcategories": [
+      { "name": "Recorder Enclosures" },
+      { "name": "Compound Optical Microscopes" },
+      { "name": "Audio Equipment Enclosure" },
+      { "name": "Speaker Enclosure" },
+      { "name": "Wireless Radio Enclosure" },
+      { "name": "LCD Bracket Enclosure" },
+      { "name": "Video Camera Enclosure" },
+      { "name": "Film Camera Enclosure" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Smart Product and Accessories",
+    "subcategories": [
+      { "name": "Parts for Interphone" },
+      { "name": "Circuit Board Fixing Bracket" },
+      { "name": "Gateway Enclosure" },
+      { "name": "Wifi Equipment Enclosure" },
+      { "name": "Wireless Transceiver Enclosure" },
+      { "name": "Digital Camera Enclosure" },
+      { "name": "GPS Navigator Enclosure" },
+      { "name": "Tachograph Enclosure" },
+      { "name": "Monitor Enclosure" },
+      { "name": "Tracker Enclosure" },
+      { "name": "Digital Audio Player Enclosure" },
+      { "name": "Radio Remote Control Enclosure" },
+      { "name": "Smart Doorbell Enclosure" },
+      { "name": "Signal Transmitter Enclosure" },
+      { "name": "Electronic Scale Enclosure" },
+      { "name": "Vacuum Cleaner Enclosure" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Board & Block Category",
+    "subcategories": [
+      { "name": "Steel Rectangular Plate" },
+      { "name": "Steel Irregular Board" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Cavity & Enclosure Category",
+    "subcategories": [
+      { "name": "Steel Cylinder Enclosure" },
+      { "name": "Steel Enclosure" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Flange & Pipe Joint & Shaft Coupling Category",
+    "subcategories": [
+      { "name": "Steel Connector" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Shaft Category",
+    "subcategories": [
+      { "name": "Steel Bushing" },
+      { "name": "Steel Shaft Collar" },
+      { "name": "Steel Linear Bearing" },
+      { "name": "Steel Bearing Housing" },
+      { "name": "Steel Rotating Shaft" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Fastening & Joining Category",
+    "subcategories": [
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Irregular Shape Category",
+    "subcategories": [
+      { "name": "Steel Connection Limit Block" },
+      { "name": "Steel Bracket" },
+      { "name": "Steel Gear" },
+      { "name": "Steel Sprocket" },
+      { "name": "Steel Crank Arm" },
+      { "name": "Others" }
+    ]
+  },
+  {
+    "name": "Others",
+    "subcategories": [
+      { "name": "Metal components for furniture" },
+      { "name": "Metal components of motor vehicles" },
+      { "name": "Industrial metal components" }
+    ]
+  }
+]
