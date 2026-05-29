@@ -74,8 +74,8 @@
                                                         <h6>Order #{{$item->order_number}}</h6>
                                                         <span>Placed on {{ \Carbon\Carbon::parse($item->created_at)->format('M d, Y') }}</span>
                                                     </div>
-                                                    <div class="status delivered">
-                                                        <i class="bi bi-check-circle"></i> Delivered
+                                                    <div class="status {{$item->status}}">
+                                                        <i class="bi bi-check-circle"></i> {{ucfirst($item->status)}}
                                                     </div>
                                                 </div>
 
@@ -91,7 +91,8 @@
                                                     <div class="details">
                                                         <h6>{{$item->details[0]->manufacturingTypes->name}}</h6>
                                                         <p>Qty: {{$item->details->count()}}</p>
-                                                        <span class="price">₹{{$item->total}}</span>
+                                                        <p>Lead Time: {{$item->lead_time}}</p>
+                                                        
                                                     </div>
 
                                                     <!-- RIGHT SIDE -->

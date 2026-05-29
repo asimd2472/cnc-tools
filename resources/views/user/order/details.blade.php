@@ -43,6 +43,122 @@
             </div>
             <p class="mb-0">{{ \Carbon\Carbon::parse($orderDetails->created_at)->format('M d, Y') }}</p>
             </div>
+
+            @if($orderDetails->status=='processing')
+            <div class="d-flex align-content-center flex-wrap gap-2">
+                <button class="btn btn-success waves-effect" data-bs-toggle="modal" data-bs-target="#paymentModal">Pay Now</button>
+            </div>
+            @endif
+
+            <!-- Payment Modal -->
+            <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="paymentModalLabel">Enter Address Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        {{-- <form id="razorpay-address-form" action="{{ route('user.payment') }}" method="POST"> --}}
+                        <form id="razorpay-address-form" action="{{ route('user.payment') }}" method="POST">
+                            @csrf
+                            <input type="hidden"
+                                name="order_number"
+                                value="{{ $orderDetails->order_number }}">
+
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{@$address->name}}" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="phone" class="form-label">Phone</label>
+                                        <input type="text" class="form-control" id="phone" name="phone" value="{{@$address->phone}}" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="address" class="form-label">Address</label>
+                                        <input type="text" class="form-control" id="address" name="address" value="{{@$address->address}}" required>
+                                    </div>
+                                    
+                                    <div class="col-6 mb-3">
+                                        <label for="city" class="form-label">City</label>
+                                        <input type="text" class="form-control" id="city" name="city" value="{{@$address->city}}" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="state" class="form-label">State</label>
+                                        <input type="text" class="form-control" id="state" name="state" value="{{@$address->state}}" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="pincode" class="form-label">Pincode</label>
+                                        <input type="text" class="form-control" id="pincode" name="pincode" value="{{@$address->pincode}}" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="landmark" class="form-label">Landmark</label>
+                                        <input type="text" class="form-control" id="landmark" value="{{@$address->landmark}}" name="landmark">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="address_type" class="form-label">Address Type</label>
+                                        <select class="form-select" id="address_type" name="address_type" required>
+                                            <option value="home" {{@$address->address_type=='home' ? 'selected' : ''}}>Home</option>
+                                            <option value="office" {{@$address->address_type=='office' ? 'selected' : ''}}>Office</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Razorpay Script -->
+                                {{-- <div id="razorpay-script-container" style="display:none;">
+                                    <script
+                                        src="https://checkout.razorpay.com/v1/checkout.js"
+                                        data-key="{{ config('razorpay.key') }}"
+                                        data-amount="{{ ($orderDetails->total)*100 }}"
+                                        data-currency="INR"
+                                        data-order_id="{{ $order_id }}"
+                                        data-buttontext="Pay Now"
+                                        data-name="My Website"
+                                        data-description="Order Payment"
+                                        data-image="https://your-logo-url.com/logo.png"
+                                        data-theme.color="#3399cc">
+                                    </script>
+                                </div> --}}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                {{-- <button type="submit" class="btn btn-success">Proceed to Pay</button> --}}
+                                <button type="submit"
+                                        class="btn btn-success"
+                                        id="payBtn">
+
+                                    <span id="payBtnText">
+                                        Proceed To Pay
+                                    </span>
+
+                                    <span id="payBtnLoader"
+                                        class="spinner-border spinner-border-sm d-none"
+                                        role="status">
+                                    </span>
+
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {{-- <form action="{{ route('user.payment') }}" method="POST">
+                @csrf
+
+                <script
+                    src="https://checkout.razorpay.com/v1/checkout.js"
+                    data-key="{{ config('razorpay.key') }}"
+                    data-amount="{{ ($orderDetails->total)*100 }}"
+                    data-currency="INR"
+                    data-order_id="{{ $order_id }}"
+                    data-buttontext="Pay Now"
+                    data-name="My Website"
+                    data-description="Order Payment"
+                    data-image="https://your-logo-url.com/logo.png"
+                    data-theme.color="#3399cc">
+                </script>
+            </form> --}}
         </div>
     </div>
     </div>
@@ -58,9 +174,9 @@
                             <div class="card-body">
                                 <h6 class="mb-3 fw-semibold text-uppercase text-muted">Order details</h6>
                                         
-                                @foreach ($orderDetails->details as $order)
+                                @foreach ($orderDetails->details as $key => $order)
                                     <div class="">
-                                        <h6 class="mb-6">{{$order->manufacturingTypes->name}}</h6>
+                                        <h4 class="mb-6"> {{($key+1)}} {{$order->manufacturingTypes->name}}</h4>
 
                                         <hr>
 
@@ -95,7 +211,7 @@
                                             <div class="col-md-3"><strong>CAD File:</strong></div>
                                             <div class="col-md-9">
                                                 @if($order->cad_file)
-                                                    <a href="{{ asset('storage/file/'.$order->cad_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
+                                                    <a href="{{ asset('storage/'.$order->cad_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
                                                 @else
                                                     <span class="text-muted">N/A</span>
                                                 @endif
@@ -104,7 +220,7 @@
                                             <div class="col-md-3 mt-2"><strong>Technical Drawing:</strong></div>
                                             <div class="col-md-9 mt-2">
                                                 @if($order->technical_drawing_file)
-                                                    <a href="{{ asset('storage/file/'.$order->technical_drawing_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
+                                                    <a href="{{ asset('storage/'.$order->technical_drawing_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
                                                 @endif
                                             </div>
                                         </div>
@@ -116,17 +232,13 @@
                                             <div class="col-md-3"><strong>Threads & Holes:</strong></div>
                                             <div class="col-md-9">
                                                 {{ $order->threads_and_tapped_holes }} 
-                                                @if($order->threads_and_tapped_holes)
-                                                    <a href="{{ asset('storage/file/'.$order->threads_and_tapped_holes) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
+
                                             </div>
 
                                             <div class="col-md-3 mt-2"><strong>Inserts:</strong></div>
                                             <div class="col-md-9 mt-2">
                                                 {{ $order->inserts }}
-                                                @if($order->inserts_file)
-                                                    <a href="{{ asset('storage/file/'.$order->inserts_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
+                                                
                                             </div>
 
                                             <div class="col-md-3"><strong>Tolerance:</strong></div>
@@ -138,18 +250,12 @@
                                             <div class="col-md-3 mt-2"><strong>Part Marking:</strong></div>
                                             <div class="col-md-9 mt-2">
                                                 {{ $order->part_marking ?? 'N/A' }}
-                                                @if($order->part_marking_file)
-                                                    <a href="{{ asset('storage/file/'.$order->part_marking_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
+                                                
                                             </div>
 
                                             <div class="col-md-3 mt-2"><strong>Parts Assembly:</strong></div>
                                             <div class="col-md-9 mt-2">
                                                 {{ $order->parts_assembly }}
-
-                                                @if($order->parts_assembly_file)
-                                                    <a href="{{ asset('storage/file/'.$order->parts_assembly_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
                                             </div>
 
                                             <div class="col-md-3 mt-2"><strong>Printing risk:</strong></div>
@@ -170,9 +276,6 @@
                                             <div class="col-md-3"><strong>Inspection:</strong></div>
                                             <div class="col-md-9">
                                                 {{ $order->inspection ?? 'N/A' }}
-                                                @if($order->inspection_file)
-                                                    <a href="{{ asset('storage/file/'.$order->inspection_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
                                             </div>
                                         </div>
 
@@ -264,6 +367,179 @@
 @endsection
 
 @push('scripts')
+{{-- <script>
+    // Show Razorpay script after address form validation
+    document.getElementById('razorpay-address-form').addEventListener('submit', function(e) {
+        // Optionally, add client-side validation here
+        // Show Razorpay script container so the script is included in the form
+        document.getElementById('razorpay-script-container').style.display = 'block';
+    });
+</script> --}}
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+document.getElementById('razorpay-address-form')
+.addEventListener('submit', function(e){
+
+    e.preventDefault();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Button Loader Start
+    |--------------------------------------------------------------------------
+    */
+
+    let payBtn = document.getElementById('payBtn');
+
+    let payBtnText = document.getElementById('payBtnText');
+
+    let payBtnLoader = document.getElementById('payBtnLoader');
+
+    payBtn.disabled = true;
+
+    payBtnText.innerText = 'Processing...';
+
+    payBtnLoader.classList.remove('d-none');
+
+    let formData = new FormData(this);
+
+    fetch("{{ route('user.payment') }}", {
+
+        method: "POST",
+
+        headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        },
+
+        body: formData
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        if(data.success){
+
+            var options = {
+
+                "key": data.key,
+
+                "amount": data.amount,
+
+                "currency": "INR",
+
+                "name": "My Website",
+
+                "description": "Order Payment",
+
+                "order_id": data.razorpay_order_id,
+
+                "handler": function (response){
+
+                    let form = document.createElement('form');
+
+                    form.method = 'POST';
+
+                    form.action = "{{ route('user.payment.success') }}";
+
+                    form.innerHTML = `
+                        @csrf
+
+                        <input type="hidden"
+                               name="razorpay_payment_id"
+                               value="${response.razorpay_payment_id}">
+
+                        <input type="hidden"
+                               name="razorpay_order_id"
+                               value="${response.razorpay_order_id}">
+
+                        <input type="hidden"
+                               name="razorpay_signature"
+                               value="${response.razorpay_signature}">
+
+                        <input type="hidden"
+                               name="order_number"
+                               value="${data.order_number}">
+                    `;
+
+                    document.body.appendChild(form);
+
+                    form.submit();
+                },
+
+                "modal": {
+
+                    "ondismiss": function(){
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Reset Button If User Closes Razorpay
+                        |--------------------------------------------------------------------------
+                        */
+
+                        payBtn.disabled = false;
+
+                        payBtnText.innerText =
+                            'Proceed To Pay';
+
+                        payBtnLoader.classList.add('d-none');
+                    }
+
+                },
+
+                "prefill": {
+
+                    "name": data.name,
+
+                    "email": data.email,
+
+                    "contact": data.phone
+
+                },
+
+                "theme": {
+
+                    "color": "#3399cc"
+
+                }
+
+            };
+
+            var rzp1 = new Razorpay(options);
+
+            rzp1.open();
+
+        }else{
+
+            payBtn.disabled = false;
+
+            payBtnText.innerText = 'Proceed To Pay';
+
+            payBtnLoader.classList.add('d-none');
+
+            alert('Something went wrong');
+
+        }
+
+    })
+
+    .catch(error => {
+
+        payBtn.disabled = false;
+
+        payBtnText.innerText = 'Proceed To Pay';
+
+        payBtnLoader.classList.add('d-none');
+
+        alert('Server Error');
+
+    });
+
+});
+
+</script>
 
 @endpush

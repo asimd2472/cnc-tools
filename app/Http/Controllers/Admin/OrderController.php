@@ -216,4 +216,28 @@ class OrderController extends Controller
             'msg' => 'Price update successfully',
         ]);
     }
+
+    public function orderStatusUpdate(Request $request){
+        $order = Orders::findOrFail($request->order_id);
+        $order->status = $request->status;
+        if($request->status == 'processing'){
+            $order->subtotal = $request->subtotal;
+            $order->discount = $request->discount;
+            $order->shipping_charge = $request->shipping_charge;
+
+            // auto calculate
+            $subtotal = $request->subtotal - $request->discount;
+            $total = $subtotal + $request->shipping_charge;
+
+            
+            $order->total = $total;
+
+            $order->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'msg' => 'Status update successfully',
+        ]);
+    }
 }

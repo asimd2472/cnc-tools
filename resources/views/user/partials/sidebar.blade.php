@@ -4,16 +4,13 @@
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
           <a href="{{url('/')}}" class="brand-link">
-            <!--begin::Brand Image-->
-            <img
+            {{-- <img
               src="{{ Vite::asset('resources/images/dummy-logo.png')}}"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
-            />
-            <!--end::Brand Image-->
-            <!--begin::Brand Text-->
+            /> --}}
             {{-- <span class="brand-text fw-light">Admin Panel</span> --}}
-            <!--end::Brand Text-->
+            <span class="fw-800 fs-3 text-dark"><span class="text-primary-color">P</span> ProtoCut</span>
           </a>
           <!--end::Brand Link-->
         </div>

@@ -4,8 +4,10 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\UserAuthController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\UserOrderController;
@@ -20,6 +22,7 @@ Route::get('/',[HomeController::class,'index'])->name('home');
 Route::get('/shared-projects',[HomeController::class,'shared_projects'])->name('shared_projects');
 Route::get('/project-details',[HomeController::class,'project_details'])->name('project_details');
 Route::get('/cnc-quote',[HomeController::class,'cnc_quote'])->name('cnc_quote');
+Route::post('/cnc-quote/submit',[HomeController::class,'submit_cnc_quote'])->name('cnc_quote.submit');
 Route::get('/profile',[HomeController::class,'profile'])->name('profile');
 Route::get('/faq',[HomeController::class,'faq'])->name('faq');
 Route::get('/why-us',[HomeController::class,'why_us'])->name('why_us');
@@ -37,6 +40,9 @@ Route::post('signup', [UserAuthController::class, 'signup'])->name('signup');
 
 Route::get('/auth/google', [UserAuthController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [UserAuthController::class, 'callback']);
+
+Route::get('/forgot-password',[UserAuthController::class,'forgot_password'])->name('forgot_password');
+Route::post('/forgot-password-submit',[UserAuthController::class,'forgot_password_submit'])->name('forgot_password_submit');
 
 
 
@@ -59,9 +65,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('orders-details/{order_number}', [OrderController::class, 'orders_details'])->name('orders_details');
         Route::delete('deleteOrder', [OrderController::class, 'deleteOrder'])->name('order.delete');
         Route::post('updateSummary', [OrderController::class, 'updateSummary'])->name('orders.updateSummary');
+        Route::post('orderStatusUpdate', [OrderController::class, 'orderStatusUpdate'])->name('orders.orderStatusUpdate');
+
+        Route::get('setting', [SettingController::class, 'index'])->name('setting');
+        Route::post('setting/save', [SettingController::class, 'save'])->name('setting.save');
         
     });
 
+    
 });
 
 
@@ -78,6 +89,21 @@ Route::prefix('user')->name('user.')->group(function () {
 
         Route::get('my-order', [UserOrderController::class, 'index'])->name('my_order');
         Route::get('orders-details/{order_number}', [UserOrderController::class, 'orders_details'])->name('orders_details');
+
+        Route::get('/pay', [PaymentController::class, 'index']);
+        Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
+
+        // Route::get('payment/success/{razorpay_payment_id}', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+        Route::post('/payment-success',
+            [PaymentController::class, 'paymentSuccess']
+        )->name('payment.success');
+
+        Route::get('/payment-success-page/{razorpay_payment_id}',
+            [PaymentController::class, 'success']
+        )->name('payment.success.page');
+        
     });
 
 });
+
+Route::post('/razorpay/webhook', [PaymentController::class, 'webhook']);

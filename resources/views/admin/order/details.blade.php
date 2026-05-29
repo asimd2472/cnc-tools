@@ -61,9 +61,9 @@
                             <div class="card-body">
                                 <h6 class="mb-3 fw-semibold text-uppercase text-muted">Order details</h6>
                                         
-                                @foreach ($orderDetails->details as $order)
+                                @foreach ($orderDetails->details as $key => $order)
                                     <div class="">
-                                        <h6 class="mb-6">{{$order->manufacturingTypes->name}}</h6>
+                                        <h4 class="mb-6"> {{($key+1)}} {{$order->manufacturingTypes->name}}</h4>
 
                                         <hr>
 
@@ -98,7 +98,7 @@
                                             <div class="col-md-3"><strong>CAD File:</strong></div>
                                             <div class="col-md-9">
                                                 @if($order->cad_file)
-                                                    <a href="{{ asset('storage/file/'.$order->cad_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
+                                                    <a href="{{ asset('storage/'.$order->cad_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
                                                 @else
                                                     <span class="text-muted">N/A</span>
                                                 @endif
@@ -107,7 +107,7 @@
                                             <div class="col-md-3 mt-2"><strong>Technical Drawing:</strong></div>
                                             <div class="col-md-9 mt-2">
                                                 @if($order->technical_drawing_file)
-                                                    <a href="{{ asset('storage/file/'.$order->technical_drawing_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
+                                                    <a href="{{ asset('storage/'.$order->technical_drawing_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
                                                 @endif
                                             </div>
                                         </div>
@@ -119,17 +119,13 @@
                                             <div class="col-md-3"><strong>Threads & Holes:</strong></div>
                                             <div class="col-md-9">
                                                 {{ $order->threads_and_tapped_holes }} 
-                                                @if($order->threads_and_tapped_holes)
-                                                    <a href="{{ asset('storage/file/'.$order->threads_and_tapped_holes) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
+
                                             </div>
 
                                             <div class="col-md-3 mt-2"><strong>Inserts:</strong></div>
                                             <div class="col-md-9 mt-2">
                                                 {{ $order->inserts }}
-                                                @if($order->inserts_file)
-                                                    <a href="{{ asset('storage/file/'.$order->inserts_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
+                                                
                                             </div>
 
                                             <div class="col-md-3"><strong>Tolerance:</strong></div>
@@ -141,18 +137,12 @@
                                             <div class="col-md-3 mt-2"><strong>Part Marking:</strong></div>
                                             <div class="col-md-9 mt-2">
                                                 {{ $order->part_marking ?? 'N/A' }}
-                                                @if($order->part_marking_file)
-                                                    <a href="{{ asset('storage/file/'.$order->part_marking_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
+                                                
                                             </div>
 
                                             <div class="col-md-3 mt-2"><strong>Parts Assembly:</strong></div>
                                             <div class="col-md-9 mt-2">
                                                 {{ $order->parts_assembly }}
-
-                                                @if($order->parts_assembly_file)
-                                                    <a href="{{ asset('storage/file/'.$order->parts_assembly_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
                                             </div>
 
                                             <div class="col-md-3 mt-2"><strong>Printing risk:</strong></div>
@@ -173,9 +163,6 @@
                                             <div class="col-md-3"><strong>Inspection:</strong></div>
                                             <div class="col-md-9">
                                                 {{ $order->inspection ?? 'N/A' }}
-                                                @if($order->inspection_file)
-                                                    <a href="{{ asset('storage/file/'.$order->inspection_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">View File</a>
-                                                @endif
                                             </div>
                                         </div>
 
@@ -204,6 +191,30 @@
                 </div>
             </div>
             <div class="col-12 col-lg-4">
+                <div class="col-md-12">
+                    <div class="card card-primary mb-3">
+                        <div class="card-body">
+                            <h6 class="mb-3 fw-semibold text-uppercase text-muted">Order Status</h6>
+                            <p>Change the status of this order. This will be visible to the customer</p>
+                            @if($orderDetails->status=='pending')
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            @elseif($orderDetails->status=='confirmed')
+                                <span class="badge bg-primary">Confirmed</span>
+                            @elseif($orderDetails->status=='processing')
+                                <span class="badge rounded-pill bg-info text-dark">Processing</span>
+                            @elseif($orderDetails->status=='delivered')
+                                <span class="badge rounded-pill bg-success">Delivered</span>
+                            @elseif($orderDetails->status=='cancelled')
+                                <span class="badge rounded-pill bg-danger">Cancelled</span>
+                            @elseif($orderDetails->status=='shipped')
+                                <span class="badge rounded-pill bg-secondary">Shipped</span>
+                            @endif
+
+                            <button class="btn btn-outline-info waves-effect btn-sm" data-bs-toggle="modal" data-bs-target="#orderStatusModal">Update Status</button>
+
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <div class="card card-primary mb-3">
                         <div class="card-body">
@@ -279,11 +290,26 @@
                 <div class="col-md-12">
                     <div class="card card-primary mb-3">
                         <div class="card-body">
-                            <h6 class="mb-3 fw-semibold text-uppercase text-muted">Billing address</h6>
-                            <p>{{$orderDetails->billing_address}}</p>
 
                             <h6 class="mb-3 fw-semibold text-uppercase text-muted">Payment Method</h6>
                             <p>{{$orderDetails->payment_method}}</p>
+                            @if($orderDetails->payment_status=='pending')
+                                <h6 class="mb-0 align-items-center d-flex w-px-100 text-warning me-2 ms-2">
+                                    Pending
+                                </h6>
+                            @elseif($orderDetails->payment_status=='paid')
+                                <h6 class="mb-0 align-items-center d-flex w-px-100 text-success me-2 ms-2">
+                                    Paid
+                                </h6>
+                            @elseif($orderDetails->payment_status=='failed')
+                                <h6 class="mb-0 align-items-center d-flex w-px-100 text-danger me-2 ms-2">
+                                    Failed
+                                </h6>   
+                            @elseif($orderDetails->payment_status=='refunded')
+                                <h6 class="mb-0 align-items-center d-flex w-px-100 text-secondary me-2 ms-2">
+                                    Refunded
+                                </h6>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -291,6 +317,94 @@
 
                 
         </div>
+    </div>
+</div>
+
+<div class="modal fade" id="orderStatusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="updateStatusForm">
+            @csrf
+            <input type="hidden" name="order_id" value="{{ $orderDetails->id ?? '' }}">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Update order status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    {{-- Order Status --}}
+                    <div class="mb-3">
+                        <label>Status</label>
+
+                        <select name="status" id="status" class="form-select">
+
+                            {{-- Current Status --}}
+                            <option value="{{ $orderDetails->status }}" selected>
+                                {{ ucfirst($orderDetails->status) }}
+                            </option>
+
+                            {{-- Pending --}}
+                            @if($orderDetails->status == 'pending')
+                                <option value="processing">Processing</option>
+                                <option value="cancelled">Cancelled</option>
+                            @endif
+
+                            {{-- Processing --}}
+                            @if($orderDetails->status == 'processing')
+                                <option value="cancelled">Cancelled</option>
+                            @endif
+
+                            {{-- Confirmed --}}
+                            @if($orderDetails->status == 'confirmed')
+                                <option value="cancelled">Cancelled</option>
+                                <option value="delivered">Delivered</option>
+                            @endif
+
+                        </select>
+                    </div>
+
+                    {{-- Price Section --}}
+                    <div id="priceSection"
+                        style="{{ $orderDetails->status == 'processing' ? '' : 'display:none;' }}">
+
+                        <div class="mb-3">
+                            <label>Order Price</label>
+                            <input type="number"
+                                name="subtotal"
+                                class="form-control"
+                                value="{{ $orderDetails->subtotal ?? '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Discount</label>
+                            <input type="number"
+                                name="discount"
+                                class="form-control"
+                                value="{{ $orderDetails->discount ?? '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Shipping Charge</label>
+                            <input type="number"
+                                name="shipping_charge"
+                                class="form-control"
+                                value="{{ $orderDetails->shipping_charge ?? '' }}">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+
+            </div>
+        </form>
     </div>
 </div>
 
@@ -368,6 +482,38 @@
                 toastr.success('Something went wrong');
             }
         });
+    });
+
+
+    $('#updateStatusForm').submit(function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url: "{{ route('admin.orders.orderStatusUpdate') }}",
+            method: "POST",
+            data: $(this).serialize(),
+            success: function(res){
+                toastr.success(res.msg);
+                location.reload();
+
+            },
+            error: function(){
+                toastr.success('Something went wrong');
+            }
+        });
+    });
+</script>
+<script type="module">
+    $('#status').on('change', function () {
+
+        let status = $(this).val();
+
+        if(status === 'processing') {
+            $('#priceSection').show();
+        } else {
+            $('#priceSection').hide();
+        }
+
     });
 </script>
 @endpush

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Helpers\QuoteOrderHelper;
 use App\Http\Controllers\Controller;
+use App\Mail\SendUserPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -10,7 +12,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Mail;
 
 class UserAuthController extends Controller
 {
@@ -43,6 +45,7 @@ class UserAuthController extends Controller
             ], $remember)) {
 
                 $request->session()->regenerate();
+                $this->storePendingQuoteFromSession($request);
 
                 return redirect()->route('user.profile')
                     ->with('success', 'Login successful!');
@@ -103,6 +106,7 @@ class UserAuthController extends Controller
             }
 
             Auth::login($user, true);
+            $this->storePendingQuoteFromSession(request());
 
             return redirect()->route('user.profile')
                 ->with('success', 'Login with Google successful!');
@@ -134,8 +138,60 @@ class UserAuthController extends Controller
                 'status' => 1,
             ]);
             Auth::login($user);
+            $this->storePendingQuoteFromSession($request);
             return redirect()->route('user.profile')
                 ->with('success', 'Account created successfully!');
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong. Please try again.');
+        }
+    }
+
+    protected function storePendingQuoteFromSession(Request $request): void
+    {
+        $sessionQuote = $request->session()->get('cnc_quote_request');
+        $parts = (array) data_get($sessionQuote, 'parts', []);
+        $leadTime = (string) data_get($sessionQuote, 'lead_time', '3-5');
+
+        if (!Auth::check() || empty($parts)) {
+            return;
+        }
+
+        QuoteOrderHelper::storeQuote($parts, Auth::id(), $leadTime);
+        $request->session()->forget('cnc_quote_request');
+    }
+
+    public function forgot_password(){
+        return view('frontend.forgot_password');
+    }
+
+    public function forgot_password_submit(Request $request){
+        try {
+            $request->validate([
+                'email' => 'required|email|exists:users,email',
+            ]);
+
+            $user = User::where('email', $request->email)->where('user_type', '2')->first();
+            
+            if(!$user){
+                return back()->with('error', 'User record not found.');     
+            }
+
+            $plainPassword = Str::random(8);
+            $password = Hash::make($plainPassword);
+            $user->update(['password' => $password]);
+
+
+            
+            Mail::raw("Your new pasword is: $plainPassword", function ($message) use ($user) {
+                $message->to($user->email)
+                        ->subject('Reset Password');
+            });
+
+            return redirect()->back()->with('success', 'Password reset successfully');
+            
+
         } catch (ValidationException $e) {
             return back()->withErrors($e->validator)->withInput();
         } catch (\Exception $e) {

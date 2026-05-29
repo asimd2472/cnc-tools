@@ -59,21 +59,11 @@
                     <div class="auth-card">
 
                         <div class="auth-card-header">
-                            <h2>Sign in to ProtoCut</h2>
-                            <p>Don't have an account? <a href="{{route('register')}}"
-                                    class="text-primary fw-bold text-decoration-none">Create one free</a></p>
+                            <h2>Forgot password</h2>
                         </div>
 
-                        <!-- Social Login -->
-                        <a href="{{ route('google.login') }}" class="btn-social mb-3">
-                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-                            Continue with Google
-                        </a>
-
-                        <div class="auth-divider">or sign in with email</div>
-
                         <!-- Login Form -->
-                        <form id="loginForm" action="{{route('login.submit')}}" method="POST" novalidate>
+                        <form id="loginForm" action="{{route('forgot_password_submit')}}" method="POST" novalidate>
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label">Email Address</label>
@@ -85,37 +75,12 @@
                                 <div class="invalid-feedback">Please enter a valid email address.</div>
                             </div>
 
-                            <div class="mb-1">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <label class="form-label mb-0">Password</label>
-                                    <a href="{{url('/forgot-password')}}" class="text-primary text-decoration-none"
-                                        style="font-size:12px;font-weight:600;">Forgot password?</a>
-                                </div>
-                                <div class="auth-input-wrap">
-                                    <i class="bi bi-lock input-icon"></i>
-                                    <input type="password" name="password" class="form-control" id="loginPassword"
-                                        placeholder="Enter your password" required>
-                                    <button type="button" class="toggle-password" data-target="loginPassword">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </div>
-                                <div class="invalid-feedback">Password is required.</div>
-                            </div>
-
-                            <div class="form-check mt-3 mb-4">
-                                <input class="form-check-input" type="checkbox" name="remember" id="rememberMe" {{ old('remember') ? 'checked' : '' }}>
-                                <label class="form-check-label text-muted" for="rememberMe" style="font-size:13px;">
-                                    Keep me signed in
-                                </label>
-                            </div>
-
                             <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold fs-6">
-                                <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Send Reset Password
                             </button>
                         </form>
 
-                        <div class="auth-footer-link">
-                            New to ProtoCut? <a href="{{route('register')}}">Create a free account</a>
+                        <div class="auth-footer-link"><a href="{{route('login')}}">Login</a>
                         </div>
 
                     </div>

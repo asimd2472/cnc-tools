@@ -106,6 +106,17 @@
                 background: #fff4e5;
                 color: #ff9800;
             }
+
+            &.confirmed {
+                background: #018b36;
+                color: #ffffff;
+            }
+
+            &.processing {
+                background: #4200db;
+                color: #ffffff;
+            }
+            
         }
     }
 
