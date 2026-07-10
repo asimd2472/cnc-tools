@@ -102,3 +102,32 @@ $.ajaxSetup({
     }
 });
 
+
+window.cancelOrder = function(orderId) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This order will be canceled!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, cancel it!"
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: base_url+"/user/cancelOrder",
+                type: 'POST',
+                data: {'orderId':orderId},
+                beforeSend:function(){
+                },
+                success: function(data){
+                    if(data.status=='success'){
+                        toastr.success(data.msg);
+                        location.reload();
+                    }else if(data.status=='error'){
+                        toastr.error(data.msg);
+                    }
+                }
+            });
+        }
+    });
+}
+

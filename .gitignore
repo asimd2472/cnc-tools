@@ -4,14 +4,54 @@
 /public/storage
 /storage/*.key
 /vendor
+
+# Environment
 .env
 .env.backup
 .env.production
+
+# Homestead
 Homestead.json
 Homestead.yaml
+
+# Composer auth
 auth.json
+
+# Logs
 npm-debug.log
 yarn-error.log
+pnpm-debug.log*
+
+# IDEs
 /.fleet
 /.idea
 /.vscode
+
+# Laravel cache & logs
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/bootstrap/cache/*
+
+# Keep framework folders
+!/storage/framework/cache/.gitignore
+!/storage/framework/sessions/.gitignore
+!/storage/framework/testing/.gitignore
+!/storage/framework/views/.gitignore
+!/bootstrap/cache/.gitignore
+
+# Vite build files
+/public/build
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing coverage
+coverage/
+
+# Temporary files
+*.tmp
+*.temp

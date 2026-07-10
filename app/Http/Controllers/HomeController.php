@@ -142,11 +142,45 @@ class HomeController extends Controller
         $uploadedCadFiles = $request->file('cad_uploads', []);
         $uploadedDrawingFiles = $request->file('drawing_uploads', []);
 
+        // foreach ($parts as $index => &$part) {
+        //     $partCadPaths = [];
+        //     foreach (($uploadedCadFiles[$index] ?? []) as $file) {
+        //         if ($file) {
+        //             $partCadPaths[] = $file->store('quotes/cad', 'public');
+        //         }
+        //     }
+
+        //     if (!empty($partCadPaths)) {
+        //         $part['cad_files'] = $partCadPaths;
+        //     }
+
+        //     $partDrawingPaths = [];
+        //     foreach (($uploadedDrawingFiles[$index] ?? []) as $file) {
+        //         if ($file) {
+        //             $partDrawingPaths[] = $file->store('quotes/drawings', 'public');
+        //         }
+        //     }
+
+        //     if (!empty($partDrawingPaths)) {
+        //         $part['technical_drawing_files'] = $partDrawingPaths;
+        //     }
+        // }
+        // unset($part);
+
         foreach ($parts as $index => &$part) {
+
             $partCadPaths = [];
+
             foreach (($uploadedCadFiles[$index] ?? []) as $file) {
                 if ($file) {
-                    $partCadPaths[] = $file->store('quotes/cad', 'public');
+
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                    $partCadPaths[] = $file->storeAs(
+                        'quotes/cad',
+                        $filename,
+                        'public'
+                    );
                 }
             }
 
@@ -155,9 +189,17 @@ class HomeController extends Controller
             }
 
             $partDrawingPaths = [];
+
             foreach (($uploadedDrawingFiles[$index] ?? []) as $file) {
                 if ($file) {
-                    $partDrawingPaths[] = $file->store('quotes/drawings', 'public');
+
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                    $partDrawingPaths[] = $file->storeAs(
+                        'quotes/drawings',
+                        $filename,
+                        'public'
+                    );
                 }
             }
 
@@ -165,6 +207,7 @@ class HomeController extends Controller
                 $part['technical_drawing_files'] = $partDrawingPaths;
             }
         }
+
         unset($part);
 
         $request->session()->put('cnc_quote_request', [
@@ -176,7 +219,7 @@ class HomeController extends Controller
         $orderId = null;
         if (Auth::check() && (string) Auth::user()->user_type === '2') {
             $order = QuoteOrderHelper::storeQuote($parts, Auth::id(), $validated['lead_time'] ?? '3-5');
-            $orderId = $order->id;
+            $orderId = $order->order_number;
             $request->session()->forget('cnc_quote_request');
         }
 

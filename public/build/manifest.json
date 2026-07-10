@@ -7,6 +7,34 @@
     "file": "assets/bootstrap-icons-mSm7cUeB.woff2",
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
+  "resources/images/3d-printing.jpg": {
+    "file": "assets/3d-printing-Bl8X9wVO.jpg",
+    "src": "resources/images/3d-printing.jpg"
+  },
+  "resources/images/960x0.jpg": {
+    "file": "assets/960x0-Ch6oWyvb.jpg",
+    "src": "resources/images/960x0.jpg"
+  },
+  "resources/images/cnc.jpg": {
+    "file": "assets/cnc-D-sDNbcN.jpg",
+    "src": "resources/images/cnc.jpg"
+  },
+  "resources/images/dummy-logo.png": {
+    "file": "assets/dummy-logo-BFsmJaLw.png",
+    "src": "resources/images/dummy-logo.png"
+  },
+  "resources/images/how-does-a-3d-printer-work.jpg": {
+    "file": "assets/how-does-a-3d-printer-work-D04DH0P6.jpg",
+    "src": "resources/images/how-does-a-3d-printer-work.jpg"
+  },
+  "resources/images/profile-image.png": {
+    "file": "assets/profile-image-Ycax43fl.png",
+    "src": "resources/images/profile-image.png"
+  },
+  "resources/images/tinyg-cnc-controller-board.webp": {
+    "file": "assets/tinyg-cnc-controller-board-BGLT1-vM.webp",
+    "src": "resources/images/tinyg-cnc-controller-board.webp"
+  },
   "resources/js/app.js": {
     "file": "assets/app-DS1WIBgj.js",
     "name": "app",

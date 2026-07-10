@@ -147,11 +147,24 @@
 
                                             <div class="col-md-3 mt-2"><strong>Printing risk:</strong></div>
                                             <div class="col-md-9 mt-2">
-                                                <span class="badge bg-info">{{ $order->printing_risk ?? 'N/A' }}</span>
+                                                {{-- <span class="badge bg-info">{{ $order->printing_risk ?? 'N/A' }}</span> --}}
+                                                 @php
+                                                    $risks = json_decode($order->printing_risk, true);
+
+                                                    $riskLabels = collect($risks ?? [])
+                                                        ->filter(fn($value) => $value)
+                                                        ->keys()
+                                                        ->map(fn($key) => ucfirst($key))
+                                                        ->implode(', ');
+                                                @endphp
+
+                                                <span class="badge bg-info">
+                                                    {{ $riskLabels ?: 'N/A' }}
+                                                </span>
                                             </div>
 
-                                            <div class="col-md-4"><strong>Finished Appearance:</strong></div>
-                                            <div class="col-md-8">
+                                            <div class="col-md-3"><strong>Finished Appearance:</strong></div>
+                                            <div class="col-md-9">
                                                 {{ $order->finished_appearance ?? 'N/A' }}
                                             </div>
                                         </div>
@@ -276,23 +289,41 @@
                                 <span class="fw-bold fs-6">Total</span>
                                 <span class="fw-bold fs-5 text-primary">₹{{$orderDetails->total}}</span>
                             </div>
+
+                            @if($orderDetails->payment_status=='paid')
+
+                            <div class="text-center mt-4">
+                                <a class="btn btn-outline-success waves-effect px-4 py-2"
+                                href="{{ route('admin.invoice', ['order_id' => Crypt::encrypt($orderDetails->id), 'type' => 'download']) }}"
+                                target="_blank">
+                                    <i class="fa-solid fa-download me-2"></i>
+                                    Download Invoice
+                                </a>
+                            </div>
+
+                            @endif
                         </div>
                     </div>
                 </div>
+                @if($orderDetails->payment_status=='paid')
                 <div class="col-md-12">
                     <div class="card card-primary mb-3">
                         <div class="card-body">
-                            <h6 class="mb-3 fw-semibold text-uppercase text-muted">Shipping address</h6>
-                            <p>{{$orderDetails->shipping_address}}</p>
+                            <h6 class="mb-3 fw-semibold text-uppercase text-muted">Delivery details</h6>
+                            @if($orderDetails->shippingAddress)
+                            <p> <strong><i class="{{$orderDetails->shippingAddress->address_type == 'home' ? 'bi bi-house' : 'bi bi-building'}}"></i> {{ucfirst($orderDetails->shippingAddress->address_type)}} </strong> {{$orderDetails->shippingAddress->address}}, {{$orderDetails->shippingAddress->landmark}}, {{$orderDetails->shippingAddress->city}}, {{$orderDetails->shippingAddress->pincode}}, {{$orderDetails->shippingAddress->state}}</p>
+                            <p> <strong><i class="bi bi-person"></i> {{ucfirst($orderDetails->shippingAddress->name)}} </strong> {{$orderDetails->shippingAddress->phone}}</p>
+                            @endif
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="col-md-12">
                     <div class="card card-primary mb-3">
                         <div class="card-body">
 
                             <h6 class="mb-3 fw-semibold text-uppercase text-muted">Payment Method</h6>
-                            <p>{{$orderDetails->payment_method}}</p>
+                            <p>Online (Razorpay)</p>
                             @if($orderDetails->payment_status=='pending')
                                 <h6 class="mb-0 align-items-center d-flex w-px-100 text-warning me-2 ms-2">
                                     Pending

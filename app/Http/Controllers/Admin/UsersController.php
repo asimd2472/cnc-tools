@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Orders;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -85,12 +86,43 @@ class UsersController extends Controller
         echo json_encode(['status'=>1, 'msg'=>'Status updated successfully']);
     }
 
-    public function deleteUser(Request $request){
+    // public function deleteUser(Request $request){
+    //     $id = $request->userId;
+    //     User::where('id', $id)->delete();
+    //     return response()->json([
+    //         'status' => 1,
+    //         'msg' => 'Users Deleted successfully',
+    //     ]);
+    // }
+
+    public function deleteUser(Request $request)
+    {
         $id = $request->userId;
-        User::where('id', $id)->delete();
+        $hasNonPendingOrders = Orders::where('user_id', $id)
+            ->where('status', '!=', 'pending')
+            ->exists();
+
+        if ($hasNonPendingOrders) {
+            return response()->json([
+                'status' => 0,
+                'msg' => 'User cannot be deleted because they have confirmed or completed orders.',
+            ]);
+        }
+
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => 0,
+                'msg' => 'User not found.',
+            ]);
+        }
+
+        $user->delete();
+
         return response()->json([
             'status' => 1,
-            'msg' => 'Users Deleted successfully',
+            'msg' => 'User deleted successfully.',
         ]);
     }
 }

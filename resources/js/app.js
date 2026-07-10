@@ -12,6 +12,10 @@ toastr.options = {
     positionClass: "toast-top-right",
 };
 
+import.meta.glob([
+    '../images/**'
+]);
+
 import Swal from 'sweetalert2';
 window.Swal = Swal;
 

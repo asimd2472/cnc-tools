@@ -1918,7 +1918,8 @@
                         toastr.success(result.message || 'Quote request submitted successfully.');
                         submitBtn.disabled = false;
                         refreshPartCountFromForms();
-                        window.location.href = base_url + '/user/my-order';
+                        // window.location.href = base_url + '/user/my-order';
+                        window.location.href = base_url + '/user/order-success?order_id=' + result.order_id;
                     }
 
                     

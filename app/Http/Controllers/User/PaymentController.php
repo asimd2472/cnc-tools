@@ -298,7 +298,7 @@ class PaymentController extends Controller
 
                 $paymentId = $data['payload']['payment']['entity']['id'];
 
-                // Update order status here
+                
 
             }
 

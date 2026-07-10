@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Orders;
+use App\Models\Payments;
+use App\Models\Setting;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -239,5 +243,64 @@ class OrderController extends Controller
             'success' => true,
             'msg' => 'Status update successfully',
         ]);
+    }
+
+
+    public function invoice(Request $request, $order_id)
+    {
+        $today = Carbon::today()->format('Y-m-d');
+        $order_id = Crypt::decrypt($order_id);
+
+        $orderDetails = Orders::where('id', $order_id)->first();
+        $payment = Payments::where('order_id', $orderDetails->order_number)->first();
+        $setting = Setting::first();
+
+        $pdf = Pdf::loadView('invoice.index', compact('payment', 'setting', 'orderDetails'));
+        $pdf->setOptions(['isRemoteEnabled' => true]);
+
+        // return $pdf->stream('invoice_'.$today.'.pdf');
+        return $pdf->download('invoice_'.$today.'.pdf');
+
+    }
+
+    public function payment_list(Request $request)
+    {
+        
+
+        if ($request->ajax()) {
+
+            $payments = Payments::orderBy('id', 'desc')->get();
+
+            return DataTables::of($payments)
+
+                ->addColumn('invoice_no', function ($row) {
+                    return 'INV-0'.$row->id;
+                })
+
+                ->addColumn('order_id', function ($row) {
+                    return '<a href="'.route('admin.orders_details', $row->order_id).'"> #'.$row->order_id.' </a>';
+                })
+
+                ->addColumn('created_at', function ($row) {
+                    return \Carbon\Carbon::parse($row->created_at)->format('M d, Y');
+                })
+
+
+                ->addColumn('amount', function ($row) {
+                    return $row->amount;
+                })
+
+                ->addColumn('status', function ($row) {
+                    return $row->status;
+                })
+
+                ->addColumn('payment_id', function ($row) {
+                    return $row->payment_id;
+                })
+
+                ->rawColumns(['order_id'])
+                ->make(true);
+        }
+        return view('admin.payment.index');
     }
 }

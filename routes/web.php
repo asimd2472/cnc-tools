@@ -13,10 +13,24 @@ use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+
+Route::get('/clearcache', function () {
+    Artisan::call('optimize:clear');
+});
+
+Route::get('/migrate', function () {
+    Artisan::call('migrate');
+});
+
+Route::get('/storagelink', function () {
+    Artisan::call('storage:link');
+});
 
 Route::get('/',[HomeController::class,'index'])->name('home');
 Route::get('/shared-projects',[HomeController::class,'shared_projects'])->name('shared_projects');
@@ -69,6 +83,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('setting', [SettingController::class, 'index'])->name('setting');
         Route::post('setting/save', [SettingController::class, 'save'])->name('setting.save');
+
+        Route::get('invoice/{order_id}', [OrderController::class, 'invoice'])->name('invoice');
+        
+        Route::get('payment-list', [OrderController::class, 'payment_list'])->name('payment_list');
         
     });
 
@@ -101,6 +119,12 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('/payment-success-page/{razorpay_payment_id}',
             [PaymentController::class, 'success']
         )->name('payment.success.page');
+
+        Route::post('cancelOrder', [UserOrderController::class, 'cancelOrder'])->name('cancelOrder');
+        Route::get('invoice/{order_id}', [UserOrderController::class, 'invoice'])->name('invoice');
+        Route::get('order-success', [UserOrderController::class, 'order_success'])->name('order_success');
+
+        
         
     });
 

@@ -45,7 +45,12 @@ class UserAuthController extends Controller
             ], $remember)) {
 
                 $request->session()->regenerate();
-                $this->storePendingQuoteFromSession($request);
+                // $this->storePendingQuoteFromSession($request);
+                $quoteRequest = session('cnc_quote_request');
+                if ($quoteRequest) {
+                    $this->storePendingQuoteFromSession(request());
+                    return redirect()->route('user.order_success')->with('success', 'Order Successfully!');
+                }
 
                 return redirect()->route('user.profile')
                     ->with('success', 'Login successful!');
@@ -106,7 +111,12 @@ class UserAuthController extends Controller
             }
 
             Auth::login($user, true);
-            $this->storePendingQuoteFromSession(request());
+
+            $quoteRequest = session('cnc_quote_request');
+            if ($quoteRequest) {
+                $this->storePendingQuoteFromSession(request());
+                return redirect()->route('user.order_success')->with('success', 'Order Successfully!');
+            }
 
             return redirect()->route('user.profile')
                 ->with('success', 'Login with Google successful!');
@@ -138,7 +148,12 @@ class UserAuthController extends Controller
                 'status' => 1,
             ]);
             Auth::login($user);
-            $this->storePendingQuoteFromSession($request);
+            // $this->storePendingQuoteFromSession($request);
+            $quoteRequest = session('cnc_quote_request');
+            if ($quoteRequest) {
+                $this->storePendingQuoteFromSession(request());
+                return redirect()->route('user.order_success')->with('success', 'Order Successfully!');
+            }
             return redirect()->route('user.profile')
                 ->with('success', 'Account created successfully!');
         } catch (ValidationException $e) {

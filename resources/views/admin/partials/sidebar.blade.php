@@ -56,6 +56,15 @@
               </li>
 
               <li class="nav-item">
+                  <a href="{{ route('admin.payment_list') }}"
+                    class="nav-link {{ request()->routeIs('admin.payment_list') ? 'active' : '' }}">
+                    
+                      <i class="bi bi-currency-rupee"></i>
+                      <p>Payment list</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
                   <a href="{{ route('admin.setting') }}"
                     class="nav-link {{ request()->routeIs('admin.setting') ? 'active' : '' }}">
                       <i class="bi bi-gear"></i>

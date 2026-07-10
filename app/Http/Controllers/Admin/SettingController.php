@@ -24,6 +24,10 @@ class SettingController extends Controller
             'pan' => 'nullable|string',
             'key_id' => 'nullable|string',
             'key_secret' => 'nullable|string',
+            'company_name' => 'nullable|string',
+            'email' => 'nullable|string',
+            'phone' => 'nullable|string',
+            'razorpay_webhook_secret' => 'nullable|string',
         ]);
 
         $setting = \App\Models\Setting::first();

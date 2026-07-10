@@ -12,14 +12,24 @@ class Orders extends Model
     protected $guarded = [];
     use SoftDeletes;
 
-    public function userDetails(): HasOne
+    // public function userDetails(): HasOne
+    // {
+    //     return $this->HasOne(User::class,'id', 'user_id');
+    // }
+    
+    public function userDetails()
     {
-        return $this->HasOne(User::class,'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     public function details(): HasMany
     {
         return $this->HasMany(OrderDetails::class,'order_id', 'id');
+    }
+
+    public function shippingAddress(): HasOne
+    {
+        return $this->HasOne(UserShippingAddress::class,'id', 'shipping_address');
     }
 
 }
